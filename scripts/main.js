@@ -32,3 +32,36 @@ gsap.utils.toArray(".skill-progress").forEach(bar => {
     ease: "bounce.out"
   });
 });
+//  current form submission code:
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const formData = new FormData(this);
+  const submitButton = this.querySelector('button[type="submit"]');
+  const originalButtonText = submitButton.textContent;
+  
+  try {
+    submitButton.textContent = 'Sending...';
+    submitButton.disabled = true;
+    
+    const response = await fetch(this.action, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+    
+    if (response.ok) {
+      alert('Thank you! Your message has been sent successfully.');
+      this.reset();
+    } else {
+      throw new Error('Form submission failed');
+    }
+  } catch (error) {
+    alert('Oops! There was a problem sending your message. Please try again later.');
+  } finally {
+    submitButton.textContent = originalButtonText;
+    submitButton.disabled = false;
+  }
+});
